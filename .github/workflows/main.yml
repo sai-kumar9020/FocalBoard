@@ -25,6 +25,25 @@ jobs:
           role-to-assume: arn:aws:iam::225748035722:role/OIDC-assign-role
           aws-region: us-east-1
 
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: v0.50.2
+
+      - name: Run TFLint
+        run: tflint --init && tflint -f compact
+        continue-on-error: true
+
+      - name: Run tfsec
+        uses: aquasecurity/tfsec-action@v1.0.0
+        continue-on-error: true
+
+      - name: Generate Terraform JSON Plan
+        run: |
+          terraform init -reconfigure
+          terraform plan -out=tfplan.binary
+          terraform show -json tfplan.binary > tfplan.json
+
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
 
