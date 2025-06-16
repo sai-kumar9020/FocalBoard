@@ -20,7 +20,7 @@ resource "tls_private_key" "example" {
 }
 
 resource "aws_key_pair" "example" {
-  key_name   = "example-key"
+  key_name   = "sai"
   public_key = tls_private_key.example.public_key_openssh
 }
 
